@@ -1,0 +1,35 @@
+package com.setur.report.domain.entity;
+
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.io.Serializable;
+import java.util.UUID;
+
+@Entity
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+@Table(name = "report_detail")
+public class ReportDetail implements Serializable {
+
+    private static final long serialVersionUID = 7104533194213231182L;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(updatable = false, nullable = false)
+    private UUID id;
+
+    @Column(name = "location", nullable = false)
+    private String location;
+
+    @Column(name = "contact_count", nullable = false)
+    private Integer contactCount;
+
+    @Column(name = "contact__phone_count", nullable = false)
+    private Integer contactPhoneCount;
+}
