@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class ReportGenerateEventHandler implements EventHandler<ReportGenerateEvent> {
 
-    private final ReportService contactService;
+    private final ReportService reportService;
 
     @Override
     @Retryable(
@@ -21,6 +21,6 @@ public class ReportGenerateEventHandler implements EventHandler<ReportGenerateEv
             backoff = @Backoff(random = true, delay = 1000, maxDelay = 5000, multiplier = 2),
             listeners = "defaultListenerSupport")
     public void handle(ReportGenerateEvent reportGenerateEvent) {
-
+        reportService.generateReport(reportGenerateEvent.getReportId());
     }
 }

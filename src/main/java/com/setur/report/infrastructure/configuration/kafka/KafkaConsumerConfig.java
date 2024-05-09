@@ -1,6 +1,7 @@
 package com.setur.report.infrastructure.configuration.kafka;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.setur.report.converter.KafkaMessageConverter;
 import com.setur.report.infrastructure.configuration.kafka.data.KafkaConsumerConfigData;
 import lombok.RequiredArgsConstructor;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.annotation.EnableKafka;
+import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
 import org.springframework.kafka.support.serializer.JsonDeserializer;
@@ -58,6 +60,18 @@ public class KafkaConsumerConfig<K, V> {
                 new StringDeserializer(),
                 deserializer
         );
+    }
+
+    @Bean
+    public ConcurrentKafkaListenerContainerFactory<String, JsonNode> kafkaListenerContainerFactory() {
+        ConcurrentKafkaListenerContainerFactory<String, JsonNode> factory = new ConcurrentKafkaListenerContainerFactory<>();
+        factory.setConsumerFactory(consumerFactory());
+        factory.setBatchListener(kafkaConsumerConfigData.getBatchListener());
+        factory.setConcurrency(kafkaConsumerConfigData.getConcurrencyLevel());
+        factory.setAutoStartup(kafkaConsumerConfigData.getAutoStartup());
+        factory.getContainerProperties().setPollTimeout(kafkaConsumerConfigData.getPollTimeoutMs());
+        factory.setRecordMessageConverter(new KafkaMessageConverter());
+        return factory;
     }
 
 
