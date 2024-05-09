@@ -27,6 +27,6 @@ public class ReportGenerateEventConsumer implements EventConsumer<ReportGenerate
                         @Header(KafkaHeaders.OFFSET) String offset,
                         @Header(KafkaHeaders.GROUP_ID) String groupId,
                         @Payload ReportGenerateEvent reportGenerateEvent) {
-
+        publisher.publishEvent(reportGenerateEvent);
     }
 }
